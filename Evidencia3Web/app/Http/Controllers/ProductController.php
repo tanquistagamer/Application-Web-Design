@@ -1,118 +1,146 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Product;
+
 use Illuminate\Http\Request;
+use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\Response*
-     */
-    public function index()
-    {
-        $products = Product::all(); 
-
-        return view('products.index', compact('products')); 
-    }
-
-    /**
-     * Show the form for creating a new resource.
+     * Display a listing of the products.
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function create() 
-    { 
-        return view('products.create'); // Redirige a la vista create para agregar un nuevo producto
+    public function index()
+    {
+        $products = Product::all();
+        return view('products.index', compact('products'));
     }
-
 
     /**
-     * Store a newly created resource in storage.
+     * Display a form for creating a new product.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Contracts\View\View
      */
-    public function store(Request $request) 
-    { 
-        $validatedData = $request->validate([ 
-            'cliente' => 'required|max:100', 
-            'producto' => 'required|max:100', 
-            'precio' => 'required|numeric', 
-            'tracking' => 'required|max:50', 
-        ]); 
-
-        Product::create($validatedData); // Crea un nuevo producto con los datos validados
-
-        return redirect('/products')->with('success', 'El producto se ha guardado exitosamente'); // Redirige al índice con un mensaje de éxito
+    public function create()
+    {
+        return view('products.create');
     }
 
-     /**
-     * Display the specified resource.
+    /**
+     * Store a newly created product in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'cliente' => 'required|max:100',
+            'producto' => 'required|max:100',
+            'picture' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'precio' => 'required|numeric',
+            'tracking' => 'required|max:50',
+        ]);
+
+        $file = $request->file('picture');
+        if ($file) {
+            $path = Storage::disk('public')->put('Products', $file);
+        } else {
+            $path = 'https://picsum.photos/200/300'; // Imagen predeterminada si no se sube ninguna
+        }
+
+        Product::create([
+            'cliente' => $validatedData['cliente'],
+            'producto' => $validatedData['producto'],
+            'picture' => $path,
+            'precio' => $validatedData['precio'],
+            'tracking' => $validatedData['tracking'],
+            'created_at' => now(),
+        ]);
+
+        return redirect('/products')->with('success', 'El producto se ha guardado exitosamente');
+    }
+
+    /**
+     * Display the specified product.
      *
      * @param  int  $id
      * @return \Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function show($id)
-    { 
-        $product = Product::findOrFail($id); 
-
-        return view('products.show', compact('product')); 
-    }   
-
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function edit($id) 
-    { 
-        $product = Product::findOrFail($id); // Busca el producto por ID o lanza una excepción si no existe
-
-        return view('products.edit', compact('product')); // Redirige a la vista edit con los datos del producto
+    {
+        $product = Product::findOrFail($id);
+        return view('products.show', compact('product'));
     }
 
+    /**
+     * Show the form for editing the specified product.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('products.edit', compact('product'));
+    }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified product in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) 
+    public function update(Request $request, $id)
     {
-        // Depuración opcional para ver los datos enviados
-        // dd($request->all());
+        $validatedData = $request->validate([
+            'cliente' => 'required|max:100',
+            'producto' => 'required|max:100',
+            'picture' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'precio' => 'required|numeric',
+            'tracking' => 'required|max:50',
+        ]);
 
-        $validatedData = $request->validate([ 
-            'cliente' => 'required|max:100', 
-            'producto' => 'required|max:100', 
-            'precio' => 'required|numeric', 
-            'tracking' => 'required|max:50', 
-        ]); 
+        $product = Product::findOrFail($id);
 
-        Product::whereId($id)->update($validatedData); // Actualiza el producto con los datos validados
+        if ($request->file('picture')) {
+            $path = Storage::disk('public')->put('Products', $request->file('picture'));
 
-        return redirect('/products')->with('success', 'Los datos del producto se han actualizado exitosamente'); // Redirige al índice con un mensaje de éxito
+            $product->update([
+                'cliente' => $request->cliente,
+                'producto' => $request->producto,
+                'picture' => $path,
+                'precio' => $request->precio,
+                'tracking' => $request->tracking,
+                'updated_at' => now(),
+            ]);
+        } else {
+            $product->update($validatedData);
+        }
+
+        return redirect('/products')->with('success', 'Los datos del producto se han actualizado exitosamente');
     }
-
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified product from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id) 
-    { 
-        $product = Product::findOrFail($id); 
-        $product->delete();
-        return redirect('/products')->with('success', 'El producto ha sido eliminado exitosamente'); // Redirige al índice con un mensaje de éxito
-    }
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
 
+        if ($product->picture) {
+            Storage::disk('public')->delete($product->picture);
+        }
+
+        $product->delete();
+
+        return redirect('/products')->with('success', 'El producto se ha eliminado exitosamente');
+    }
 }

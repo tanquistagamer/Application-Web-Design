@@ -5,10 +5,17 @@
     .uper { 
       margin-top: 40px; 
     } 
+    .image-container {
+      text-align: center;
+    }
+    .image-container img {
+      max-width: 100%;
+      height: auto;
+    }
   </style> 
   <div class="card uper"> 
     <div class="card-header"> 
-      Ver Producto 
+      Detalles del Producto 
     </div> 
 
     <div class="card-body"> 
@@ -38,8 +45,11 @@
         <label for="tracking">Tracking:</label> 
         <input type="text" class="form-control" name="tracking" value="{{ $product->tracking }}" disabled /> 
       </div> 
+      <div class="form-group image-container"> 
+        <img src="{{ asset('storage/' . $product->picture) }}" class="img-fluid" alt="Imagen del Producto"> 
+      </div> 
       <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary">Editar</a> 
       <a href="{{ route('products.index') }}" class="btn btn-secondary">Volver</a> 
     </div> 
   </div> 
-@endsection 
+@endsection
