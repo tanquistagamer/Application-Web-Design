@@ -1,11 +1,6 @@
-@extends('adminlte::page')
-
-@section('title', 'Home')
-
-@section('content_header')
-    <h1>Home</h1>
-@stop
+@extends('layouts.app')
 
 @section('content')
-    <p>Bienvenidos a la Pagina Principal.</p>
-@stop
+    <h1>Bienvenidos a la Pagina Principal</h1>
+    <p>Aqui se pondra todos los datos del proyecto.</p>
+@endsection

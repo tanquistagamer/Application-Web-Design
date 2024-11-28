@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Controlador;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,14 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/home', function () {
-    return view('pages.home');
-})->name('home');
-
-Route::get('/photos', function () {
-    return view('pages.photos');
-})->name('photos');
-
-Route::get('/contact', function () {
-    return view('pages.contact');
-})->name('contact');
+Route::get('/', [Controlador::class, 'home'])->name('home');
+Route::get('/photos', [Controlador::class, 'photos'])->name('photos');
+Route::get('/contact', [Controlador::class, 'contact'])->name('contact');

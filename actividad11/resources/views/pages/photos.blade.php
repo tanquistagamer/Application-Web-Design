@@ -1,11 +1,6 @@
-@extends('adminlte::page')
-
-@section('title', 'Home')
-
-@section('content_header')
-    <h1>Photos</h1>
-@stop
+@extends('layouts.app')
 
 @section('content')
-    <p>Bienvenidos a la Pagina de Multimedia.</p>
-@stop
+    <h1>Bienvenidos a la Pagina de Multimedia</h1>
+    <p>Aqui puedes checar todo sobre.</p>
+@endsection

@@ -1,11 +1,6 @@
-@extends('adminlte::page')
-
-@section('title', 'Home')
-
-@section('content_header')
-    <h1>Soporte</h1>
-@stop
+@extends('layouts.app')
 
 @section('content')
+    <h1>Soporte</h1>
     <p>Contactanos por este medio.</p>
-@stop
+@endsection
