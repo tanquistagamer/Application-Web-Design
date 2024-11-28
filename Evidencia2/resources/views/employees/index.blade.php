@@ -7,6 +7,7 @@
 </head>
 <body>
     <h1>Lista de Empleados</h1>
+    <a href="{{ route('employees.create') }}">Crear Nuevo Empleado</a>
     <table border="1">
         <thead>
             <tr>
@@ -15,6 +16,7 @@
                 <th>Email</th>
                 <th>Posición</th>
                 <th>Salario</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +27,17 @@
                     <td>{{ $employee->email }}</td>
                     <td>{{ $employee->position }}</td>
                     <td>{{ $employee->salary }}</td>
+                    <td>
+                        <!-- Botón Editar -->
+                        <a href="{{ route('employees.edit', $employee->id) }}">Editar</a>
+
+                        <!-- Botón Eliminar -->
+                        <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este empleado?')">Eliminar</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

@@ -19,5 +19,4 @@ Route::middleware('auth')->group(function () {
 
 
 Route::resource('employees', EmployeeController::class);
-
 require __DIR__.'/auth.php';
