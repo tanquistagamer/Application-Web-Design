@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chuck Norris Cards</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app" class="container my-5">
+    <h1 class="text-center mb-4">Chuck Norris Facts</h1>
+    <div class="row">
+      <chuck-card
+        v-for="(fact, index) in chuck"
+        :key="index"
+        :icon-url="fact.icon_url"
+        :value="fact.value">
+      </chuck-card>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
