@@ -9,13 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('subjects', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('subjects', function (Blueprint $table) {
+        $table->id();
+        $table->string('name'); // Nombre de la materia
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
