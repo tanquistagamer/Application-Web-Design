@@ -4,32 +4,28 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGradesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subject_id')->constrained()->onDelete('cascade');
-            $table->string('type');
-            $table->decimal('grade', 5, 2)->nullable(); // Acepta números decimales (ej. 95.5)
-            $table->date('date');
+            $table->foreignId('subject_id')->constrained()->onDelete('cascade'); // Relación con materia
+            $table->string('type'); // Tipo de actividad (tarea, examen, etc.)
+            $table->float('grade')->nullable(); // Calificación opcional
+            $table->date('date'); // Fecha de la actividad
             $table->timestamps();
         });
-    }
+    }    
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('grades');
     }
-}
+};
